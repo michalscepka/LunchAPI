@@ -1,27 +1,26 @@
 ﻿using LunchAPI.DTO;
-using LunchAPI.Helpers;
 
 namespace LunchAPI.Scrapers;
 
 public class UKlukuScraper : IWebScraper
 {
-	private readonly string _restaurantName;
-	private readonly string _url;
+	public required string RestaurantName { get; set; }
+	public required string Url { get; set; }
+	public required string XPathExpression { get; set; }
 
-    public UKlukuScraper(string restaurantName, string url)
+	public IEnumerable<Meal> GetMenuItems(List<string> menuNodes)
 	{
-		_restaurantName = restaurantName;
-		_url = url;
-	}
+		var dayNow = DateTime.Now.DayOfWeek;
+		var menuItems = new List<Meal>();
 
-	public async Task<Menu> GetLunchMenuAsync()
-	{
-		var document = await HtmlHelper.GetHtmlDocumentAsync(_url);
-
-		var menuNodes = new List<string>();
-		foreach (var item in document.DocumentNode.SelectNodes("//div[@class='wp-block-columns alignwide is-layout-flex wp-container-32 wp-block-columns-is-layout-flex']"))
-			menuNodes.Add(item.InnerText);
-
-		return null;
+		for (int i = 0; i < menuNodes.Count; i++)
+		{
+			menuItems.Add(new Meal()
+			{
+				Name = menuNodes[i],
+				Price = menuNodes[i + 1]
+			});
+		}
+		return menuItems;
 	}
 }

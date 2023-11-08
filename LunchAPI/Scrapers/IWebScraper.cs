@@ -4,5 +4,9 @@ namespace LunchAPI.Scrapers;
 
 public interface IWebScraper
 {
-	Task<Menu> GetLunchMenuAsync();
+	public string RestaurantName { get; set; }
+	public string Url { get; set; }
+	public string XPathExpression { get; set; }
+
+	IEnumerable<Meal> GetMenuItems(List<string> menuNodes);
 }
